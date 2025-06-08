@@ -1,0 +1,28 @@
+# configs/predict_rich.yaml
+
+# ── Hydra defaults ──────────────────────────
+defaults:
+  - model: motionlcm        # モデル本体（target, latent_dim…等が motionlcm.yaml から来る）
+  - datamodule: humanml3d   # HumanML3D 用の全キー（NFEATS, NJOINTS…）を一括継承
+  - predict: default        # in_len, out_len, batch_size…等を継承
+  - _self_                  # 以下のこのファイル自身のキーを有効化
+
+# ── データセット（Rich 用）オーバーライド ────────────
+datamodule:
+  humanml3d:
+    ROOT:      "try0606/sample"  # rich_sample_*.npy が入っているディレクトリ
+    FRAME_RATE: 20.0             # 必要に応じて変更
+    UNIT_LEN:   4                # 1 シーケンスあたりの秒数
+
+# ── 推論設定 ─────────────────────────────────
+predict:
+  in_len:     10                 # 直前何フレームを hint に使うか
+  out_len:    30                 # 何フレーム生成するか
+  batch_size: 1
+  controlnet: false              # ControlNet はオフ
+  text_cond:  false              # テキスト条件もオフ
+
+# ── チェックポイント指定 ────────────────────────
+model:
+  ckpt_path: "checkpoints/motionlcm.ckpt"
+

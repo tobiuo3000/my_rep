@@ -1,0 +1,30 @@
+# configs/predict_rich.yaml
+
+defaults:
+  - model: motionlcm          # モデル本体を motionlcm.yaml から読み込む
+  - datamodule: humanml3d     # HumanML3D 用 datamodule 設定一式を流用
+  - predict: default          # in_len/out_len 等の基本推論設定を流用
+  - _self_                    # このファイルの上書きを有効にする
+
+#################################
+# datamodule.humanml3d の上書き（Rich データを読み込む）
+datamodule:
+  humanml3d:
+    ROOT:      "try0606/sample"  # rich_sample_*.npy のあるディレクトリ
+    FRAME_RATE: 20.0             # fps。必要に応じて変更
+    UNIT_LEN:   4                # 1 シーケンスあたりの秒数
+
+#################################
+# 推論パラメータ
+predict:
+  in_len:     10               # 直前何フレーム読むか
+  out_len:    30               # 何フレーム生成するか
+  batch_size: 1
+  controlnet: false            # ControlNet は使わない
+  text_cond:  false            # テキスト条件も使わない
+
+#################################
+# 使うチェックポイント
+model:
+  ckpt_path: "checkpoints/motionlcm.ckpt"
+
