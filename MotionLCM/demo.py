@@ -119,8 +119,11 @@ def main():
     model.to(device)
     model.eval()
     model.requires_grad_(False)
+    
     logger.info(model.load_state_dict(state_dict))
-
+    
+    logger.info("hello??????")
+    
     FPS = eval(f"cfg.DATASET.{cfg.DATASET.NAME.upper()}.FRAME_RATE")
 
     if cfg.example is not None and not is_controlnet:
@@ -129,11 +132,19 @@ def main():
             logger.info(f"{l}: {t}")
 
         batch = {"length": length, "text": text}
+        
+        logger.info("this if sentence is executed")
 
         for rep_i in range(cfg.replication):
             with torch.no_grad():
-                joints = model(batch)[0]
+                joints, joints_ref, output_263 = model(batch)
+            
 
+
+            logger.info(f"num of output len(joints): {len(joints)}")
+            logger.info(f"joints.shape: {joints[0].shape}")
+            logger.info(f"original_263 ? .shape: {output_263[0].shape}")
+            
             num_samples = len(joints)
             for i in range(num_samples):
                 res = dict()
@@ -155,8 +166,8 @@ def main():
             for batch_id, batch in enumerate(test_dataloader):
                 batch = move_batch_to_device(batch, device)
                 with torch.no_grad():
-                    joints, joints_ref = model(batch)
-
+                    joints, joints_ref, original_263 = model(batch)
+                logger.info(f"motion_original shape:\n{original_263.shape}")
                 num_samples = len(joints)
                 text = batch['text']
                 length = batch['length']

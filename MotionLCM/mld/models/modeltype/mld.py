@@ -160,7 +160,7 @@ class MLD(BaseModel):
             joints_ref = self.feats2joints(feats_ref.detach().cpu())
             joints_ref = remove_padding(joints_ref, lengths)
 
-        return joints, joints_ref
+        return joints, joints_ref, feats_rst
 
     def predicted_origin(self, model_output: torch.Tensor, timesteps: torch.Tensor, sample: torch.Tensor) -> tuple:
         self.alphas = self.alphas.to(model_output.device)

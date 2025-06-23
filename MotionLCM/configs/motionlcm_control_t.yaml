@@ -58,7 +58,8 @@ DATASET:
   HUMANML3D:
     FRAME_RATE: 20.0
     UNIT_LEN: 4
-    ROOT: './datasets/humanml3d'
+    #ROOT: './datasets/humanml4d'
+    ROOT: './datasets/sample_rich263'
     CONTROL_ARGS:
       CONTROL: true
       TEMPORAL: true
